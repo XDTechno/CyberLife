@@ -1,11 +1,11 @@
 import threading
 import time
-
+from colorama import  Back, Style
 def test_message(d):
     import random
     count=0
     while True:
-        time.sleep(random.uniform(1, 10))
+        time.sleep(random.uniform(4,20))
         d.recv("nihao")
 class View:
     mapdata:...
@@ -15,7 +15,7 @@ class View:
         self.mapdata=map
         pass
     def send(self,str):
-        print("[View]from model:"+str)
+        print(Back.GREEN+" View "+ Style.RESET_ALL+"from model:"+str)
         pass
     def recv(self,str):
         if(str.startswith("@")):

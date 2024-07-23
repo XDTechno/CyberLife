@@ -6,6 +6,11 @@ class Unit (Entity):
         super().__init__()
         self.DNA=[23,random.randint(1,40),random.randint(1,40),random.randint(1,40)]
         self.id=random.randint(1,4096)
+    def new_act(dn):
+        res=Unit()
+        res.act=dn
+        
+        return res
     def try_mutate(self):
         if random.random()<0.1:
             self.DNA[random.randint(0,len(self.DNA)-1)]=random.randint(1,127)
