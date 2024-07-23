@@ -1,4 +1,8 @@
+"""
+things appears in a map.
+Block, dropped items, trap, or animals
+"""
+
 class Entity:
-    DNA:list
     #other status
     pass
