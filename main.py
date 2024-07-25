@@ -6,4 +6,4 @@ from view.tui_view import TuiView
 
 if __name__ == "__main__":
     launch(View())
-    # launch(TuiView())
+    #launch(TuiView())

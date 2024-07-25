@@ -8,8 +8,8 @@ class Unit (Entity):
         super().__init__()
         self.DNA = [23, random.randint(1, 40), random.randint(1, 40), random.randint(1, 40)]
         self.id = random.randint(1, 4096)
-    @staticmethod
 
+    @staticmethod
     def new_act(dn:Callable):
         res = Unit()
         res.act = dn

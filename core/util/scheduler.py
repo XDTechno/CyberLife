@@ -41,16 +41,13 @@ class Scheduler:
 
         if res == "yep":
             return None
-        if res in move_cmd:
-            dx, dy = move_direction[move_cmd[res]]
-            (npx, npy) = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
-            if (
-                npx > 0
-                and npx < self.world.width
-                and npy > 0
-                and npy < self.world.height
-            ):
-                (cur_unit.pos_x, cur_unit.pos_y) = (npx, npy)
+        if res in move_cmd:res=move_cmd[res]
+        if res in move_direction:
+            dx, dy = move_direction[res]
+            npx, npy = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
+            if  npx > 0 and npx < self.world.width and npy > 0 and npy < self.world.height :
+                cur_unit.pos_x, cur_unit.pos_y = npx, npy
+            return None
 
     @staticmethod
     def new_with_world(wld: World):

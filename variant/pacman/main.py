@@ -7,8 +7,39 @@ from colorama import Back, Style, Fore
 from core.constant import FOOD
 import time, random
 from view.tui_view import TuiView
-
-
+from core.constant import move_cmd
+def catch_pacman(self:Unit,wld):
+    huntee = []
+    (px, py) = (self.pos_x, self.pos_y)
+    for index, target in enumerate(wld.unit):
+        if target==self:
+            continue
+        dist=abs(px+py-target.pos_x-target.pos_y)
+        huntee.append((target.pos_x,target.pos_y,dist,index))
+    if len(huntee) > 0:
+        target = min(huntee, key=lambda x: x[2])
+        if target[2] == 0:
+            
+            print(f"{self.id} killing the pacman<{wld.unit[target[3]].id}>@{self.pos_x}:{self.pos_y}")
+            if random.random()>0.4:
+                wld.unit.pop(target[3])
+            return None
+        print(f"{self.id}@{self.pos_x}:{self.pos_y} -->pacman@{target[0]}:{target[1]}")
+        dx, dy = px - target[0], py - target[1]
+        if abs(dx) > abs(dy):
+            if dx > 0:
+                return move_cmd["left"]
+            else:
+                return move_cmd["right"]
+        else:
+            if dy > 0:
+                return move_cmd["up"]
+            else:
+                return move_cmd["down"]
+    else:
+        pass
+    return None
+    pass
 def test_findfood(self: Unit, wld):
     foods = []
     (px, py) = (self.pos_x, self.pos_y)
@@ -27,14 +58,14 @@ def test_findfood(self: Unit, wld):
         dx, dy = px - target[0], py - target[1]
         if abs(dx) > abs(dy):
             if dx > 0:
-                return "left"
+                return move_cmd["left"]
             else:
-                return "right"
+                return move_cmd["right"]
         else:
             if dy > 0:
-                return "up"
+                return move_cmd["up"]
             else:
-                return "down"
+                return move_cmd["down"]
     else:
         pass
     return None
@@ -67,6 +98,7 @@ def launch(view_type: View):
         scheduler.world.add_unit(Unit.new_act(test_findfood))
     for _ in range(2):
         scheduler.world.add_unit(Unit.new_act(test_setfood))
+    scheduler.world.add_unit(Unit.new_act(catch_pacman))
     view.title = "Pacman"
     view.on_message(
         lambda mes: print(
