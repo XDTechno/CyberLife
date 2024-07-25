@@ -9,7 +9,6 @@ class Unit (Entity):
     def new_act(dn):
         res=Unit()
         res.act=dn
-        
         return res
     def try_mutate(self):
         if random.random()<0.1:
