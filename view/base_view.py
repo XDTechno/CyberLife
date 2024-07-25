@@ -1,6 +1,8 @@
 import time, random, threading
 from colorama import Back, Style
 
+from core.world.world import World
+
 
 def test_message(d):
     count = 0
@@ -12,9 +14,16 @@ def test_message(d):
 
 # lowest level View output in the console. A base class.
 class View:
-    mapdata: ...
+    mapdata: World
     entitydata: ...
     handle_message: ...
+    _title:str
+    @property 
+    def title(self):
+        return self._title
+    @title.setter
+    def title(self,v):
+        self._title=v
 
     def update_map(self, map):
         # yep, asynchorus.

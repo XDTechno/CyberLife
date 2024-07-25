@@ -11,19 +11,25 @@ actually has pseudo-depth
 
 
 class World:
-    width: 2
-    height: 2
-    map: list[list[Tile]]
-    unit: list[Unit]
+    width:2
+    height:2
+    map:list[list[Tile]]
+    unit:list[Unit]
+
+    @property
+    def width(self):
+        return len(self.map)
+    @property
+    def height(self):
+        return len(self.map[0])
 
     def __init__(self) -> None:
         self.map = [[Tile(), Tile()], [Tile(), Tile()]]
         pass
-
-    def new_size(width, height):
-        res = World()
-        res.width, res.height = width, height
-        res.map = [[Tile() for _ in range(width)] for _ in range(height)]
+    @staticmethod
+    def new_size(width,height):
+        res=World()
+        res.map=[[Tile() for _ in range(width)] for _ in range(height)]
 
         return res
 

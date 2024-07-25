@@ -19,16 +19,16 @@ class Scheduler:
     world: World
     cur_round: int = 0
 
-    #the index of current entity being handled
+    # the index of current entity being handled
     loop_iter: int = 0
 
     def __init__(self):
-        #function used to handle the unit
+        # function used to handle the unit
         self.deal_unit = default_dealer
         self.cur_round = 0
 
     def next(self):
-        #at current stage, each call deals one unit. 
+        # at current stage, each call deals one unit.
         if self.loop_iter > len(self.world.unit) - 1:
             self.loop_iter = 0
             self.cur_round += 1
@@ -39,19 +39,27 @@ class Scheduler:
 
         res = self.deal_unit(cur_unit, self.world)
 
-        if res == "yep": return None
-        if (res in move_cmd):
+        if res == "yep":
+            return None
+        if res in move_cmd:
             dx, dy = move_direction[move_cmd[res]]
             (npx, npy) = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
-            if npx > 0 and npx < self.world.width and npy > 0 and npy < self.world.height:
+            if (
+                npx > 0
+                and npx < self.world.width
+                and npy > 0
+                and npy < self.world.height
+            ):
                 (cur_unit.pos_x, cur_unit.pos_y) = (npx, npy)
 
+    @staticmethod
     def new_with_world(wld: World):
         res = Scheduler()
         res.world = wld
         return res
 
-    #chain set
+    # chain set
     def set(self, **args):
-        if ("deal_unit" in args): self.deal_unit = args['deal_unit']
+        if "deal_unit" in args:
+            self.deal_unit = args["deal_unit"]
         return self

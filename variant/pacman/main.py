@@ -6,16 +6,16 @@ from view.base_view import View
 from colorama import Back, Style, Fore
 from core.constant import FOOD
 import time, random
+from view.tui_view import TuiView
 
 
 def test_findfood(self: Unit, wld):
     foods = []
     (px, py) = (self.pos_x, self.pos_y)
-    for (ir, row) in enumerate(wld.map):
-        for (ic, cell) in enumerate(row):
+    for ir, row in enumerate(wld.map):
+        for ic, cell in enumerate(row):
             if FOOD in cell:
-                foods.append((
-                    ir, ic, abs((ir - px) ** 2 + (ic - py) ** 2)))
+                foods.append((ir, ic, abs((ir - px) ** 2 + (ic - py) ** 2)))
     if len(foods) > 0:
         target = min(foods, key=lambda x: x[2])
         if target[2] == 0:
@@ -27,14 +27,14 @@ def test_findfood(self: Unit, wld):
         dx, dy = px - target[0], py - target[1]
         if abs(dx) > abs(dy):
             if dx > 0:
-                return 'left'
+                return "left"
             else:
                 return "right"
         else:
             if dy > 0:
-                return 'up'
+                return "up"
             else:
-                return 'down'
+                return "down"
     else:
         pass
     return None
@@ -51,9 +51,9 @@ def dealEntity(unit: Unit, wld: World = 0):
     dna_iter = 0
     count = 0
     uDNA = unit.DNA
-    while (dna_iter < len(unit.DNA) - 1):
+    while dna_iter < len(unit.DNA) - 1:
         dna_iter += 1
-        if (uDNA[dna_iter] > 30):
+        if uDNA[dna_iter] > 30:
             count += 1
     print(f"{unit.id}'s gene larger than 30 is of {count}")
     unit.try_mutate()
@@ -62,11 +62,18 @@ def dealEntity(unit: Unit, wld: World = 0):
 def launch():
     scheduler = Scheduler.new_with_world(World.new_size(8, 8))
 
-    for _ in range(4): scheduler.world.add_unit(Unit.new_act(test_findfood))
-    for _ in range(2): scheduler.world.add_unit(Unit.new_act(test_setfood))
     view = View()
+    # view = TuiView()
+    for _ in range(4):
+        scheduler.world.add_unit(Unit.new_act(test_findfood))
+    for _ in range(2):
+        scheduler.world.add_unit(Unit.new_act(test_setfood))
     view.title = "Pacman"
-    view.on_message(lambda mes: print(Back.BLACK + Fore.WHITE + f"some bastard said {mes}" + Style.RESET_ALL))
+    view.on_message(
+        lambda mes: print(
+            Back.BLACK + Fore.WHITE + f"some bastard said {mes}" + Style.RESET_ALL
+        )
+    )
     view.send("LAUNCH!")
 
     while True:
