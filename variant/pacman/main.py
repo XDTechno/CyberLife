@@ -59,11 +59,10 @@ def dealEntity(unit: Unit, wld: World = 0):
     unit.try_mutate()
 
 
-def launch():
+def launch(view_type: View):
     scheduler = Scheduler.new_with_world(World.new_size(8, 8))
 
-    view = View()
-    # view = TuiView()
+    view = view_type
     for _ in range(4):
         scheduler.world.add_unit(Unit.new_act(test_findfood))
     for _ in range(2):
