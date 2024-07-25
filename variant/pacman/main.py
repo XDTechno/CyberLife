@@ -7,7 +7,7 @@ from colorama import Back, Style, Fore
 from core.constant import FOOD
 import time, random
 from view.tui_view import TuiView
-from core.constant import move_cmd
+from core.constant import move_cmd,Eat
 def catch_pacman(self:Unit,wld):
     huntee = []
     (px, py) = (self.pos_x, self.pos_y)
@@ -50,10 +50,7 @@ def test_findfood(self: Unit, wld):
     if len(foods) > 0:
         target = min(foods, key=lambda x: x[2])
         if target[2] == 0:
-            tempref: Tile = wld.map[target[0]][target[1]]
-            tempref.pop(tempref.index(FOOD))
-            print(f"{self.id} ate the food@{self.pos_x}:{self.pos_y}")
-            return None
+            return Eat
         print(f"{self.id}@{self.pos_x}:{self.pos_y} -->food@{target[0]}:{target[1]}")
         dx, dy = px - target[0], py - target[1]
         if abs(dx) > abs(dy):

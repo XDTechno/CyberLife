@@ -3,6 +3,7 @@ all constants and immutables could be here.
 """
 HELLO = 114514
 # for early develop
+Eat=1919810
 FOOD = 1919
 move_cmd = {
     "right": 0xA8,

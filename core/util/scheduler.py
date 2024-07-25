@@ -1,5 +1,6 @@
 from ..world.world import World
-from ..constant import move_cmd, move_direction
+from ..entity.unit import Unit
+from ..constant import move_cmd, move_direction,Eat,FOOD
 from colorama import Fore, Style
 
 
@@ -8,12 +9,25 @@ def default_dealer(du, wld):
         return du.act(du, wld)
     else:
         return "yep"
-
-
 """
 manage the time process
 """
-
+def recv_cmd(cur_unit:Unit,wld:World,cmd):
+    if cmd == "yep":
+        return None
+    if cmd in move_cmd:
+        cmd=move_cmd[cmd]
+    if cmd in move_direction:
+        dx, dy = move_direction[cmd]
+        npx, npy = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
+        if  npx > 0 and npx < wld.width and npy > 0 and npy < wld.height :
+            cur_unit.pos_x, cur_unit.pos_y = npx, npy
+        return None
+    if cmd == Eat :
+        tempref = wld.map[cur_unit.pos_x][cur_unit.pos_y]
+        tempref.pop(tempref.index(FOOD))
+        print(f"{cur_unit.id} ate the food@{cur_unit.pos_x}:{cur_unit.pos_y}")
+        pass
 
 class Scheduler:
     world: World
@@ -37,17 +51,12 @@ class Scheduler:
         cur_unit = self.world.unit[self.loop_iter]
         self.loop_iter += 1
 
-        res = self.deal_unit(cur_unit, self.world)
+        res = recv_cmd(cur_unit,self.world,self.deal_unit(cur_unit, self.world))
+        if res is not None:
+            pass
+        return res
 
-        if res == "yep":
-            return None
-        if res in move_cmd:res=move_cmd[res]
-        if res in move_direction:
-            dx, dy = move_direction[res]
-            npx, npy = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
-            if  npx > 0 and npx < self.world.width and npy > 0 and npy < self.world.height :
-                cur_unit.pos_x, cur_unit.pos_y = npx, npy
-            return None
+        
 
     @staticmethod
     def new_with_world(wld: World):
