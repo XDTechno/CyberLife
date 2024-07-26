@@ -10,10 +10,21 @@ def default_dealer(du, wld):
         return du.act(du, wld)
     else:
         return "yep"
+def choose_direction(dx,dy):
+    if abs(dx) > abs(dy):
+        if dx > 0:
+            return move_cmd["left"]
+        else:
+            return move_cmd["right"]
+    else:
+        if dy > 0:
+            return move_cmd["up"]
+        else:
+            return move_cmd["down"]
 """
 manage the time process
 """
-def recv_cmd(cur_unit:Unit,wld:World,cmd):
+def recv_cmd(cur_unit:Unit,wld:World,cmd,view):
     if cmd == "yep":
         return None
     if cmd in move_cmd:
@@ -53,18 +64,12 @@ def recv_cmd(cur_unit:Unit,wld:World,cmd):
                     if len(foods) <= 0:
                         return None
                     target = min(foods, key=lambda x: x[2])
-                    print(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> food@{target[0]},{target[1]}")
+                    
+                    if view:
+                        view.send(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> food@{target[0]},{target[1]}")
                     dx, dy = cur_unit.pos_x - target[0], cur_unit.pos_y - target[1]
-                    if abs(dx) > abs(dy):
-                        if dx > 0:
-                            return recv_cmd(cur_unit,wld,move_cmd["left"])
-                        else:
-                            return recv_cmd(cur_unit,wld,move_cmd["right"])
-                    else:
-                        if dy > 0:
-                            return recv_cmd(cur_unit,wld,move_cmd["up"])
-                        else:
-                            return recv_cmd(cur_unit,wld,move_cmd["down"])
+                    return recv_cmd(cur_unit,wld,choose_direction(dx,dy),view)
+
                 case constant.Pacman:
                     huntee = []
                     
@@ -77,18 +82,11 @@ def recv_cmd(cur_unit:Unit,wld:World,cmd):
                     if len(huntee) <= 0:
                         return None
                     target = min(huntee, key=lambda x: x[2])
-                    print(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> Pacman@{target[0]},{target[1]}")
+                    
+                    if view:
+                        view.send(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> Pacman@{target[0]},{target[1]}")
                     dx, dy = cur_unit.pos_x - target[0], cur_unit.pos_y - target[1]
-                    if abs(dx) > abs(dy):
-                        if dx > 0:
-                            return recv_cmd(cur_unit,wld,move_cmd["left"])
-                        else:
-                            return recv_cmd(cur_unit,wld,move_cmd["right"])
-                    else:
-                        if dy > 0:
-                            return recv_cmd(cur_unit,wld,move_cmd["up"])
-                        else:
-                            return recv_cmd(cur_unit,wld,move_cmd["down"])
+                    return recv_cmd(cur_unit,wld,choose_direction(dx,dy),view)
             
         pass
         
@@ -105,7 +103,7 @@ class Scheduler:
         self.deal_unit = default_dealer
         self.cur_round = 0
 
-    def next(self):
+    def next(self,**args):
         # at current stage, each call deals one unit.
         if self.loop_iter > len(self.world.unit) - 1:
             self.loop_iter = 0
@@ -115,7 +113,7 @@ class Scheduler:
         cur_unit = self.world.unit[self.loop_iter]
         self.loop_iter += 1
 
-        res = recv_cmd(cur_unit,self.world,self.deal_unit(cur_unit, self.world))
+        res = recv_cmd(cur_unit,self.world,self.deal_unit(cur_unit, self.world),args['view'])
         if res is not None:
             pass
         return res

@@ -9,6 +9,7 @@ from core import constant
 import time, random
 from view.tui_view import TuiView
 from core.constant import move_cmd,Eat,Gofor
+view:View=...
 def catch_pacman(self:Unit,wld):
     filterfn=lambda t:t.pos_x == self.pos_x and t.pos_y == self.pos_y and t is not self
     if len(list(filter(filterfn,wld.unit)))>0:
@@ -25,7 +26,8 @@ def test_setfood(self: Unit, wld):
     pos1 = random.randint(1, wld.width - 1)
     pos2 = random.randint(1, wld.height - 1)
     wld.map[pos1][pos2].append(FOOD)
-    print(f"{self.id} put food@{pos1}:{pos2}")
+    global view
+    view.send(f"{self.id} put food@{pos1}:{pos2}")
 
 
 def dealEntity(unit: Unit, wld: World = 0):
@@ -41,9 +43,10 @@ def dealEntity(unit: Unit, wld: World = 0):
 
 
 def launch(view_type: View):
-    scheduler = Scheduler.new_with_world(World.new_size(8, 8))
+    scheduler = Scheduler.new_with_world(World.new_size(16, 16))
 
-    view = view_type
+    global view 
+    view= view_type
     for _ in range(4):
         scheduler.world.add_unit(Unit.new_act(test_findfood))
     for _ in range(2):
@@ -59,9 +62,9 @@ def launch(view_type: View):
 
     while True:
         time.sleep(0.5)
-
+        if random.random()>0.8:view.send("~")
         # something concerned outside the world should be dealt here.
-        res = scheduler.next()
+        res = scheduler.next(view=view)
         
         if res is not None:
             pass

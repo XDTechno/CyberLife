@@ -5,11 +5,14 @@ class WV(View):
     server:...
     fps:10
     handle_message:...
+    message_cache:list=...
     def __init__(self):
-        mount_server(self)
+        
+        self.server=mount_server(self)
+        self.message_cache=[]
         
     def send(self,str):
-        print("[WV]"+str)
+        self.message_cache.append(str)
         
     def recv(self,str):
         print("[WV server]"+str)

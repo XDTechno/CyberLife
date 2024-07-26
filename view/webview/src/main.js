@@ -2,19 +2,21 @@ Math.randi=(n)=>Math.floor(Math.random()*n)
 import { createApp } from 'vue'
 import './style.css'
 import 'notyf/notyf.min.css';
+
 import App from './App.vue'
-import tile from './util/tile'
-import tilemap from './util/tilemap'
+
+window.req=function(path){
+    const res =fetch("http://localhost:8008/" + path);
+    res.catch(reason=>{
+        if(reason instanceof TypeError){}else        
+        console.log("Nooo,request rejected:"+reason)})
+    return  res.then(res=>res.json()).catch(j=>console.log("parsing json failed"));
+}
 createApp(App).mount('#app')
-
-window.tile=tile;
-window.tilemap=tilemap
-import { instr } from './util/instr'
-window.instr=instr
-
-fetch('http://localhost:8008/fps').then(res=>res.json()).then(
-    i=>{console.log(i)}
-)
-fetch('http://localhost:8008/map').then(res=>res.json()).then(
-    i=>{console.log(i)}
-)
+import { Notyf } from 'notyf'
+let notyf=new Notyf()
+setInterval(() => {
+    req("message").then(i=>{
+        i.forEach(msg=>notyf.success(msg))
+    })
+}, 60);
