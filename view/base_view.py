@@ -39,7 +39,7 @@ class View:
     def recv(self, str):
         # UI -> simulator
         # maybe reply the result to UI?
-        if (self.handle_message(str) == False):
+        if (hasattr(self,"handle_message") and self.handle_message(str) == False):
             print(f"Requested <{str}> but handler returned False")
             return False
         if (str == "map"):

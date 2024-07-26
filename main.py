@@ -5,5 +5,9 @@ from view.base_view import View
 from view.tui_view import TuiView
 
 if __name__ == "__main__":
-    launch(View())
+    #launch(View())
     #launch(TuiView())
+    pass
+    
+from view.webview import  WV
+launch(WV())
