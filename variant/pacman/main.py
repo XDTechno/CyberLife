@@ -5,67 +5,20 @@ from core.util.scheduler import Scheduler
 from view.base_view import View
 from colorama import Back, Style, Fore
 from core.constant import FOOD
+from core import constant
 import time, random
 from view.tui_view import TuiView
-from core.constant import move_cmd,Eat
+from core.constant import move_cmd,Eat,Gofor
 def catch_pacman(self:Unit,wld):
-    huntee = []
-    (px, py) = (self.pos_x, self.pos_y)
-    for index, target in enumerate(wld.unit):
-        if target==self:
-            continue
-        dist=abs(px+py-target.pos_x-target.pos_y)
-        huntee.append((target.pos_x,target.pos_y,dist,index))
-    if len(huntee) > 0:
-        target = min(huntee, key=lambda x: x[2])
-        if target[2] == 0:
-            
-            print(f"{self.id} killing the pacman<{wld.unit[target[3]].id}>@{self.pos_x}:{self.pos_y}")
-            if random.random()>0.4:
-                wld.unit.pop(target[3])
-            return None
-        print(f"{self.id}@{self.pos_x}:{self.pos_y} -->pacman@{target[0]}:{target[1]}")
-        dx, dy = px - target[0], py - target[1]
-        if abs(dx) > abs(dy):
-            if dx > 0:
-                return move_cmd["left"]
-            else:
-                return move_cmd["right"]
-        else:
-            if dy > 0:
-                return move_cmd["up"]
-            else:
-                return move_cmd["down"]
-    else:
-        pass
-    return None
-    pass
+    filterfn=lambda t:t.pos_x == self.pos_x and t.pos_y == self.pos_y and t is not self
+    if len(list(filter(filterfn,wld.unit)))>0:
+        return constant.Kill
+    else :return (Gofor,constant.Pacman)
+
 def test_findfood(self: Unit, wld):
-    foods = []
-    (px, py) = (self.pos_x, self.pos_y)
-    for ir, row in enumerate(wld.map):
-        for ic, cell in enumerate(row):
-            if FOOD in cell:
-                foods.append((ir, ic, abs((ir - px) ** 2 + (ic - py) ** 2)))
-    if len(foods) > 0:
-        target = min(foods, key=lambda x: x[2])
-        if target[2] == 0:
-            return Eat
-        print(f"{self.id}@{self.pos_x}:{self.pos_y} -->food@{target[0]}:{target[1]}")
-        dx, dy = px - target[0], py - target[1]
-        if abs(dx) > abs(dy):
-            if dx > 0:
-                return move_cmd["left"]
-            else:
-                return move_cmd["right"]
-        else:
-            if dy > 0:
-                return move_cmd["up"]
-            else:
-                return move_cmd["down"]
-    else:
-        pass
-    return None
+    if FOOD in wld.map[self.pos_x][self.pos_y]:
+        return Eat
+    else :return (Gofor,FOOD)
 
 
 def test_setfood(self: Unit, wld):
@@ -109,6 +62,7 @@ def launch(view_type: View):
 
         # something concerned outside the world should be dealt here.
         res = scheduler.next()
+        
         if res is not None:
             pass
         view.update_map(scheduler.world)
