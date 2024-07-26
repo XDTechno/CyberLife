@@ -10,7 +10,8 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+##canceled cuz the web view need to use the distributed version
+#dist/
 downloads/
 eggs/
 .eggs/
