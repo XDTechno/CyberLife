@@ -43,7 +43,7 @@ def dealEntity(unit: Unit, wld: World = 0):
 
 
 def launch(view_type: View):
-    scheduler = Scheduler.new_with_world(World.new_size(16, 16))
+    scheduler = Scheduler(World.new_size(16, 16))
 
     global view 
     view= view_type
