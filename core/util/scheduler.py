@@ -39,7 +39,11 @@ def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
         dx, dy = move_direction[cmd]
         npx, npy = (cur_unit.pos_x + dx, cur_unit.pos_y + dy)
         if 0 < npx < wld.width and 0 < npy < wld.height:
+            # Clear the original coordinates of the unit in the world
+            wld.map[cur_unit.pos_x][cur_unit.pos_y].remove(cur_unit)
+            # Add the unit in the world (simulate move)
             cur_unit.pos_x, cur_unit.pos_y = npx, npy
+            wld.map[npx][npy].append(cur_unit)
         return None
     if cmd == Eat:
         tempref = wld.map[cur_unit.pos_x][cur_unit.pos_y]
@@ -62,6 +66,7 @@ def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
                 case constant.FOOD:
                     foods = []
                     (px, py) = (cur_unit.pos_x, cur_unit.pos_y)
+                    # Todo 修改食物寻找方法，每次找食物都把地图找个遍也太神秘了
                     for ir, row in enumerate(wld.map):
                         for ic, cell in enumerate(row):
                             if FOOD in cell:
@@ -69,10 +74,13 @@ def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
                     pass
                     if len(foods) <= 0:
                         return None
+                    # find the closest food
                     target = min(foods, key=lambda x: x[2])
 
                     if view:
+                        # the unit in the (pos_x, pos_y) wants to eat food in the (target[0],target[1])
                         view.send(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> food@{target[0]},{target[1]}")
+
                     dx, dy = cur_unit.pos_x - target[0], cur_unit.pos_y - target[1]
                     return recv_cmd(cur_unit, wld, choose_direction(dx, dy), view)
 
