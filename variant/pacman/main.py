@@ -50,7 +50,7 @@ def dealEntity(unit: Unit, wld: World = 0):
     unit.try_mutate()
 
 
-def launch(view_type: View):
+def launch(view_type: View, time_flow=1):
     world = World.new_size(16, 16)
     scheduler = Scheduler(world)
 
@@ -70,7 +70,7 @@ def launch(view_type: View):
     view.send("LAUNCH!")
 
     while True:
-        time.sleep(0.5)
+        time.sleep(0.5 / time_flow)
         # something concerned outside the world should be dealt here.
         res = scheduler.next(view=view)
 
@@ -80,4 +80,4 @@ def launch(view_type: View):
 
 
 if __name__ == "__main__":
-    launch(View())
+    launch(View(), 1)
