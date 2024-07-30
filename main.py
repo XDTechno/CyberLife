@@ -7,6 +7,6 @@ from view.webview import  WV
 if __name__ == "__main__":
     #launch(View())
     #launch(TuiView())
-    #launch(WV())
+    launch(WV())
     pass
 

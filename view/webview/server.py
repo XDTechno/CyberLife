@@ -55,7 +55,7 @@ class MyHandler(SimpleHTTPRequestHandler):
 
 def launch(view_instance):
     server_address = ('', 8008)
-    print(f"server start at http://127.0.0.1:{server_address[1]}")
+    print(f"server start at http://127.0.0.1:{server_address[1]}/index.html")
     
     global view
     view =view_instance
