@@ -3,7 +3,7 @@
 class Tile(list):
     def peek(self):
         return self[-1]
-    def peek_or_default(self,default):
+    def peek_or(self,default):
         if len(self)==0:
             return default
         return self.peek()
@@ -25,5 +25,20 @@ class Tile(list):
                     if(item == input):
                         self.pop(idx)
                         return 
+            except:
+                pass
+    def remove_all(self,input):
+        if callable(input):
+            try:
+                for idx,item in enumerate(self):
+                    if(input(item)):
+                        self.pop(idx)
+            except:
+                pass
+        else :
+            try:
+                for idx,item in enumerate(self):
+                    if(item == input):
+                        self.pop(idx)
             except:
                 pass

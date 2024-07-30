@@ -12,4 +12,4 @@ if __name__ == "__main__":
 #new recv_cmd defined in recv_f.py
 import core.constant as constant
 from core.util.recv_f import recv_cmd
-recv_cmd((),(),[constant.Gofor,234,2243324],())
+recv_cmd((),(),[constant.HELLO,234,2243324],())

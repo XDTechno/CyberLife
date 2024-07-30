@@ -36,7 +36,7 @@ class TuiView(View):
         if not isinstance(x, Tile):
             s = x.__str__()
             return s
-        entity = x.peek_or_default(" ")
+        entity = x.peek_or(" ")
         if not isinstance(entity, Entity):
             return entity.__str__()
         return f"E_{entity.__hash__()}"
