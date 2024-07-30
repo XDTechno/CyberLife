@@ -9,4 +9,7 @@ if __name__ == "__main__":
     #launch(TuiView())
     #launch(WV())
     pass
-
+#new recv_cmd defined in recv_f.py
+import core.constant as constant
+from core.util.recv_f import recv_cmd
+recv_cmd((),(),[constant.Gofor,234,2243324],())

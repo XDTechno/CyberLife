@@ -42,4 +42,22 @@ class World:
             self.map[u.pos_x][u.pos_y].append(u)
         except:
             pass
+    def __getitem__(self, key):
+        if not isinstance(key, tuple) or len(key) != 2:
+            raise IndexError("Index must be a tuple of length 2")
+
+        posx, posy = key
+        if posx < 0 or posx >= self.width or posy < 0 or posy >= self.height:
+            return None
+    def __setitem__(self, key, value):
+        if not isinstance(key, tuple) or len(key) != 2:
+            raise IndexError("Index must be a tuple of length 2")
+
+        posx, posy = key
+        if posx < 0 or posx >= self.width or posy < 0 or posy >= self.height:
+            raise IndexError("Index out of range")
+
+        self.map[posy][posx] = value
+
+        return self.map[posy][posx]
     #other status

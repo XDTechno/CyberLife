@@ -10,3 +10,20 @@ class Tile(list):
 
     def size(self):
         return len(self)
+    def remove(self,input):
+        if callable(input):
+            try:
+                for idx,item in enumerate(self):
+                    if(input(item)):
+                        self.pop(idx)
+                        return 
+            except:
+                pass
+        else :
+            try:
+                for idx,item in enumerate(self):
+                    if(item == input):
+                        self.pop(idx)
+                        return 
+            except:
+                pass

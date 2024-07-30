@@ -36,8 +36,9 @@ def recv_cmd(cur_unit:Unit,wld:World,cmd,view):
             cur_unit.pos_x, cur_unit.pos_y = npx, npy
         return None
     if cmd == Eat :
-        tempref = wld.map[cur_unit.pos_x][cur_unit.pos_y]
-        tempref.pop(tempref.index(constant.FOOD))
+        # tempref = wld.map[cur_unit.pos_x][cur_unit.pos_y]
+        # tempref.pop(tempref.index(constant.FOOD))
+        wld[cur_unit.pos_x,cur_unit.pos_y].remove(constant.FOOD)
         print(f"{cur_unit.id} ate the food@{cur_unit.pos_x}:{cur_unit.pos_y}")
         pass
     if cmd== Kill:
