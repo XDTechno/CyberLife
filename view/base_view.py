@@ -1,15 +1,18 @@
 import time, random, threading
 from colorama import Back, Style
-
 from core.world.world import World
 
-
+running=False
 def test_message(d):
     count = 0
-    while True:
-        time.sleep(random.uniform(4, 20))
-        d.recv("nihao" + str(count))
-        count += 1
+    cd=0
+    while running:
+        time.sleep(0.1)
+        cd-=0.1
+        if cd ==0:
+            cd = random.uniform(40, 200)
+            d.recv("nihao" + str(count))
+            count += 1
 
 
 # lowest level View output in the console. A base class.
@@ -52,7 +55,16 @@ class View:
 
     def __init__(self):
         # here starts another thread to mock the message from UI.
+        
+        global running
+        def sn(_1,_2):
+            global running
+            running=False
+            exit(0)
+        import signal
+        signal.signal(signal.SIGINT, sn)
         mock_thread = threading.Thread(target=lambda: test_message(self))
+        running=True
         mock_thread.start()
 #And the view should be used as below?
 #view=View()
