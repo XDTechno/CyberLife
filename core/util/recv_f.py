@@ -25,6 +25,8 @@ def check_single_item(cmd,cont):
     return True,max_idx
 def recv_cmd(u:Unit,wld:World,cmd,view:View):
     global groups
+    if isinstance(cmd,tuple):
+        cmd=list(cmd)
     if not isinstance (cmd,list):
         cmd=[cmd]
     
