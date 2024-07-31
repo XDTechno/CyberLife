@@ -8,8 +8,6 @@ from ..constant import move_cmd, FOOD
 2D Grid map. And includes other information.
 actually has pseudo-depth
 """
-
-
 class World:
     width: 2
     height: 2
@@ -25,7 +23,7 @@ class World:
         return len(self.map)
     
     map:list[list[Tile]]
-    #y lines ,each line contains x elements
+    # y lines ,each line contains x elements
     # [
     #   [x1y1,x2y1,x3y1],
     #   [x1y2,x2y2,x3y2],
@@ -44,8 +42,8 @@ class World:
         return res
 
     def add_unit(self, u: Unit):
-        u.pos_x = random.randint(1, self.width - 1)
-        u.pos_y = random.randint(1, self.height - 1)
+        u.pos_x = u.pos_x if hasattr(u,"pos_x") else random.randint(1, self.width - 1)
+        u.pos_y = u.pos_x if hasattr(u,"pos_y") else random.randint(1, self.height - 1)
         if not hasattr(self, "unit"):
             self.unit: list[Unit] = []
         self.unit.append(u)
@@ -71,10 +69,11 @@ class World:
         self.map[posy][posx] = value
 
         return self
-    def closest_map(self,_from:tuple,item,**args):
+    def closest_map(self,_from:tuple,valid,**args):
+        #find index of closest element stored in map that fits the valid
         px,py=_from
         collectee=[]
-        filter=item if callable(item) else lambda i:item in i
+        filter=valid if callable(valid) else lambda i:valid in i
         distance=lambda dx,dy:abs(dx**2+dy**2) if "distance" not in args else args['distance']
         for ir, row in enumerate(self.map):
             for ic, cell in enumerate(row):
@@ -83,10 +82,11 @@ class World:
         if len(collectee)>0:
             return min(collectee,lambda n:n[2])
         return None
-    def closest_unit(self,_from:tuple,item,**args):
+    def closest_unit(self,_from:tuple,valid,**args):
+        #find index of closest element stored in unit that fits the valid
         px,py=_from
         collectee=[]
-        filter=item if callable(item) else lambda i:item in i
+        filter=valid if callable(valid) else lambda i:valid in i
         distance=lambda dx,dy:abs(dx**2+dy**2) if "distance" not in args else args['distance']
         for idx,u in enumerate(self.unit):
             if(filter (u)):

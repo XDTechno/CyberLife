@@ -22,7 +22,7 @@ class TuiView(View):
             # Set default terminal size
             term_size = os.terminal_size((80, 24))
         term_side_len_min = min(term_size.columns, term_size.lines)
-        map_side_len_max = max(self.mapdata.width, self.mapdata.height)
+        map_side_len_max = max(self.map_data.width, self.map_data.height)
         block_size = (term_side_len_min // map_side_len_max) + 1
         if block_size < 2:
             print("Terminal too small!!")
@@ -31,7 +31,7 @@ class TuiView(View):
         print(colorama.ansi.Cursor.POS(0, 0), end="")
 
         texts = [
-            [self.stringify_tile(cell) for cell in row] for row in self.mapdata.map
+            [self.stringify_tile(cell) for cell in row] for row in self.map_data.map
         ]
         self.print_table(texts, block_size)
 

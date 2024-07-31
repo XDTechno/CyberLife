@@ -13,7 +13,7 @@ from core.constant import move_cmd, Eat, Gofor
 view: View = ...
 
 
-def catch_pacman(self: Unit, wld):
+def test_catchpacman(self: Unit, wld):
     filterfn = lambda t: t.pos_x == self.pos_x and t.pos_y == self.pos_y and t is not self
     if len(list(filter(filterfn, wld.unit))) > 0:
         return constant.Kill
@@ -22,62 +22,64 @@ def catch_pacman(self: Unit, wld):
 
 
 def test_findfood(self: Unit, wld):
-    # If food and an entity are in the same cell, eat it
-    if FOOD in wld.map[self.pos_x][self.pos_y]:
+    if FOOD in wld[self.pos_x,self.pos_y]:
         return Eat
     else:
-        # Else move to the closest food
-        return Gofor, FOOD
+        return [Gofor, FOOD]
 
 
-def test_setfood(self: Unit, wld):
-    pos1 = random.randint(1, wld.width - 1)
-    pos2 = random.randint(1, wld.height - 1)
-    wld.map[pos1][pos2].append(FOOD)
+def test_setfood(self: Unit, wld:World):
+    pos_x = random.randint(1, wld.width - 1)
+    pos_y = random.randint(1, wld.height - 1)
+    wld[pos_x,pos_y].append(FOOD)
     global view
-    view.send(f"{self.id} put food@{pos1}:{pos2}")
+    view.send(f"{self.id} put food@{pos_x}:{pos_y}")
 
 
-def dealEntity(unit: Unit, wld: World = 0):
-    dna_iter = 0
-    count = 0
-    uDNA = unit.DNA
-    while dna_iter < len(unit.DNA) - 1:
-        dna_iter += 1
-        if uDNA[dna_iter] > 30:
-            count += 1
-    print(f"{unit.id}'s gene larger than 30 is of {count}")
-    unit.try_mutate()
+# def dealEntity(unit: Unit, wld: World = 0):
+#     dna_iter = 0
+#     count = 0
+#     uDNA = unit.DNA
+#     while dna_iter < len(unit.DNA) - 1:
+#         dna_iter += 1
+#         if uDNA[dna_iter] > 30:
+#             count += 1
+#     print(f"{unit.id}'s gene larger than 30 is of {count}")
+#     unit.try_mutate()
 
 
-def launch(view_type: View, time_flow=1):
+def launch(view_instance: View, time_flow=1):
+    """
+    main entrance of the simulation
+    here deals with view and the model
+    maybe outer interactions too"""
+    
     world = World.new_size(16, 16)
     scheduler = Scheduler(world)
 
     global view
-    view = view_type
+    view = view_instance
     for _ in range(4):
         scheduler.world.add_unit(Unit(test_findfood))
     for _ in range(2):
         scheduler.world.add_unit(Unit(test_setfood))
-    # scheduler.world.add_unit(Unit(catch_pacman))
+    scheduler.world.add_unit(Unit(test_catchpacman,id="Killer"))
     view.title = "Pacman"
     view.on_message(
         lambda mes: print(
-            Back.BLACK + Fore.WHITE + f"some bastard said {mes}" + Style.RESET_ALL
+            Back.BLACK + Fore.WHITE + f"someon said {mes}" + Style.RESET_ALL
         )
     )
-    view.send("LAUNCH!")
+    view.send("Basic text view launched")
 
     while True:
         time.sleep(0.5 / time_flow)
-        # something concerned outside the world should be dealt here.
-        res = scheduler.next(view=view)
-
-        if res is not None:
+        
+        result = scheduler.next(view=view)
+        if result is not None:
             pass
         view.update_map(scheduler.world)
 
 
 if __name__ == "__main__":
-    launch(View(), 1)
+    launch(View())

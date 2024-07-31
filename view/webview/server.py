@@ -14,7 +14,7 @@ class MyHandler(SimpleHTTPRequestHandler):
             if not hasattr(view,'mapdata'):
                 return None
             if view is not Ellipsis:
-                content=json.dumps(view.mapdata,default=lambda o:o.__dict__)
+                content=json.dumps(view.map_data,default=lambda o:o.__dict__)
                 self.wfile.write(bytes(content,'utf-8'))
         if(self.path.startswith("/fps")):
             self.wfile.write(bytes(json.dumps([1]),'utf-8'))

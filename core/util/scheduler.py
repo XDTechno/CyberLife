@@ -3,16 +3,18 @@ from ..entity.unit import Unit
 from ..constant import move_cmd, move_direction, Eat, FOOD, Gofor, Pacman, Kill
 from .. import constant
 from colorama import Fore, Style
-from core.util.recv_f import recv_cmd as r1
+from core.util.recv_f import recv_cmd as recv_cmd_by_search
 
-def default_dealer(du, wld):
-    if hasattr(du, "act"):
-        return du.act(du, wld)
+def default_dealer(u, wld):
+    #use Unit.act as default
+    if hasattr(u, "act"):
+        return u.act(u, wld)
     else:
-        return "yep"
+        return "Noob Unit"
 
 
-def choose_direction(dx, dy):
+def choose_direction_deprecated(dx, dy):
+    #should be removed or lifted to __init__
     if abs(dx) > abs(dy):
         if dx > 0:
             return move_cmd["left"]
@@ -25,12 +27,13 @@ def choose_direction(dx, dy):
             return move_cmd["down"]
 
 
-"""
-manage the time process
-"""
 
 
-def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
+
+def recv_cmd_deprecated(cur_unit: Unit, wld: World, cmd, view):
+    """
+    primitive recv_cmd.
+    """
     if cmd == "yep":
         return None
     if cmd in move_cmd:
@@ -79,7 +82,7 @@ def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
                         view.send(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> food@{target[0]},{target[1]}")
 
                     dx, dy = cur_unit.pos_x - target[0], cur_unit.pos_y - target[1]
-                    return recv_cmd(cur_unit, wld, choose_direction(dx, dy), view)
+                    return recv_cmd_deprecated(cur_unit, wld, choose_direction_deprecated(dx, dy), view)
 
                 case constant.Pacman:
                     huntee = []
@@ -97,22 +100,25 @@ def recv_cmd(cur_unit: Unit, wld: World, cmd, view):
                     if view:
                         view.send(f"{cur_unit.id}@{cur_unit.pos_x},{cur_unit.pos_y} --> Pacman@{target[0]},{target[1]}")
                     dx, dy = cur_unit.pos_x - target[0], cur_unit.pos_y - target[1]
-                    return recv_cmd(cur_unit, wld, choose_direction(dx, dy), view)
+                    return recv_cmd_deprecated(cur_unit, wld, choose_direction_deprecated(dx, dy), view)
 
         pass
 
 
 class Scheduler:
+    """
+    manage the time process
+    """
     world: World
     cur_round: int = 0
-
     # the index of current entity being handled
     loop_iter: int = 0
-
-    def __init__(self, world: World):
+    #process the unit. the result will be sent to recv_cmd
+    deal_unit:...
+    def __init__(self, world: World,dealfn=default_dealer):
         self.world = world
         # function used to handle the unit
-        self.deal_unit = default_dealer
+        self.deal_unit = dealfn
         self.cur_round = 0
 
     def next(self, **args):
@@ -125,13 +131,19 @@ class Scheduler:
         cur_unit = self.world.unit[self.loop_iter]
         self.loop_iter += 1
 
-        # res = recv_cmd(cur_unit, self.world, self.deal_unit(cur_unit, self.world), args['view'])
-        res = r1(cur_unit, self.world, self.deal_unit(cur_unit, self.world), args['view'])
-        if res is not None:
-            pass
-        return res
+        #the result of one unit's action. May need to handle if unit required
+        action_result = recv_cmd_by_search(
+            cur_unit,
+            self.world,
+            self.deal_unit(cur_unit, self.world),
+            args['view'])
+        if action_result is not None:
+            if action_result=="Raise Biohazard Level":
+                pass
+            elif action_result=="Change weather to DaHuangXingYun":
+                pass
+        return action_result
 
-    # chain set
     def set(self, **args):
         if "deal_unit" in args:
             self.deal_unit = args["deal_unit"]

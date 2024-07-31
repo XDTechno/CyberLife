@@ -17,7 +17,7 @@ def test_message(d):
 
 # lowest level View output in the console. A base class.
 class View:
-    mapdata: World
+    map_data: World
     entitydata: ...
     handle_message: ...
     _title:str
@@ -30,7 +30,7 @@ class View:
 
     def update_map(self, map):
         # yep, asynchorus.
-        self.mapdata = map
+        self.map_data = map
         pass
 
     def send(self, str):
@@ -46,12 +46,12 @@ class View:
             print(f"Requested <{str}> but handler returned False")
             return False
         if str == "map":
-            return self.mapdata
+            return self.map_data
 
     def on_message(self, fn):
         # set handler for receiving messages from UI
         self.handle_message = fn
-        pass
+        return self
 
     def __init__(self):
         # here starts another thread to mock the message from UI.
