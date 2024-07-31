@@ -11,7 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 ##canceled cuz the web view need to use the distributed version
-dist/
+####dist/
 downloads/
 eggs/
 .eggs/
