@@ -1,22 +1,17 @@
 # block that can stack.
 # almost the minimum unit of space
+from typing import override
 class Tile(list):
     def peek(self):
         return self[-1]
-<<<<<<< HEAD
     def peek_or(self,default):
         if len(self)==0:
-=======
-
-    def peek_or_default(self, default):
-        if len(self) == 0:
->>>>>>> 72f53e7d33ae301dd055c73b921ac95fb00d2844
             return default
         return self.peek()
 
     def size(self):
         return len(self)
-<<<<<<< HEAD
+    @override
     def remove(self,input):
         if callable(input):
             try:
@@ -49,5 +44,3 @@ class Tile(list):
                         self.pop(idx)
             except:
                 pass
-=======
->>>>>>> 72f53e7d33ae301dd055c73b921ac95fb00d2844

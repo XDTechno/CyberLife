@@ -18,7 +18,7 @@ class World:
 
     @property
     def width(self):
-        return len(self.map)
+        return len(self.map[0])
 
     @property
     def height(self):
