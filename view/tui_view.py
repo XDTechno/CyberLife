@@ -16,7 +16,11 @@ class TuiView(View):
         self.refresh_ui()
 
     def refresh_ui(self):
-        term_size = os.get_terminal_size()
+        try:
+            term_size = os.get_terminal_size()
+        except OSError:
+            # Set default terminal size
+            term_size = os.terminal_size((80, 24))
         term_side_len_min = min(term_size.columns, term_size.lines)
         map_side_len_max = max(self.mapdata.width, self.mapdata.height)
         block_size = (term_side_len_min // map_side_len_max) + 1

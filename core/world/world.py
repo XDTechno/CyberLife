@@ -11,11 +11,15 @@ actually has pseudo-depth
 
 
 class World:
-    width:2
+    width: 2
+    height: 2
+    map: list[list[Tile]]
+    unit: list[Unit]
+
     @property
     def width(self):
-        return len(self.map[0])
-    height:2
+        return len(self.map)
+
     @property
     def height(self):
         return len(self.map)
@@ -32,6 +36,7 @@ class World:
     def __init__(self) -> None:
         self.map = [[Tile(), Tile()], [Tile(), Tile()]]
         pass
+
     @staticmethod
     def new_size(width,height):
         res=World()
@@ -41,7 +46,8 @@ class World:
     def add_unit(self, u: Unit):
         u.pos_x = random.randint(1, self.width - 1)
         u.pos_y = random.randint(1, self.height - 1)
-        if (not hasattr(self, "unit")): self.unit: list[Unit] = []
+        if not hasattr(self, "unit"):
+            self.unit: list[Unit] = []
         self.unit.append(u)
         try:
             self[u.pos_x,u.pos_y].append(u)
