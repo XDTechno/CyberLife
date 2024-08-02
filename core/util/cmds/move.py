@@ -4,10 +4,10 @@ def check(i):
     try:
         if i in move_cmd:
             return (True,0)
-        return False
+        return (False,0)
     except:
         print(f"check i error:{i}")
-        return False
+        return (False,0)
 def dofn(u,w,a,v):
     dx, dy = move_direction[a]
     npx, npy = (u.pos_x + dx, u.pos_y + dy)

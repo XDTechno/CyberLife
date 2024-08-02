@@ -37,9 +37,12 @@ def recv_cmd(u:Unit,wld:World,cmd,view:View):
     for cur_rule in rules:
         #search each rule and execute
         condition=cur_rule[0]
+        
         valid = check_single_rule(cmd,condition)
+        
         if  valid[0]== False :
             continue
+        
         
         idx=valid[1]
         #slice the rest of cmd as arguments passed to fnbody
