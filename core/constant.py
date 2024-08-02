@@ -1,13 +1,13 @@
 """
 all constants and immutables could be here.
 """
-HELLO = 114514
+HELLO = "HELLO"
 # for early develop
-Gofor = 232
-Eat = 1919810
-Kill = 1919811
-FOOD = 1919
-Pacman = 2222
+Gofor = "Gofor"
+Eat = "Eat"
+Kill = "Kill"
+FOOD = "FOOD"
+Pacman = "Pacman"
 move_cmd = {
     "right": 0xA8,
     "left": 0xA9,

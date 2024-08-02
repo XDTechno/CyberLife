@@ -22,16 +22,16 @@ def test_catchpacman(self: Unit, wld):
 
 
 def test_findfood(self: Unit, wld):
-    if FOOD in wld[self.pos_x,self.pos_y]:
+    if FOOD in wld[self.pos_x, self.pos_y]:
         return Eat
     else:
         return [Gofor, FOOD]
 
 
-def test_setfood(self: Unit, wld:World):
+def test_setfood(self: Unit, wld: World):
     pos_x = random.randint(1, wld.width - 1)
     pos_y = random.randint(1, wld.height - 1)
-    wld[pos_x,pos_y].append(FOOD)
+    wld[pos_x, pos_y].append(FOOD)
     global view
     view.send(f"{self.id} put food@{pos_x}:{pos_y}")
 
@@ -53,8 +53,8 @@ def launch(view_instance: View, time_flow=1):
     main entrance of the simulation
     here deals with view and the model
     maybe outer interactions too"""
-    
-    world = World.new_size(16, 16)
+
+    world = World.new_size(8, 8)
     scheduler = Scheduler(world)
 
     global view
@@ -63,7 +63,7 @@ def launch(view_instance: View, time_flow=1):
         scheduler.world.add_unit(Unit(test_findfood))
     for _ in range(2):
         scheduler.world.add_unit(Unit(test_setfood))
-    scheduler.world.add_unit(Unit(test_catchpacman,id="Killer"))
+    # scheduler.world.add_unit(Unit(test_catchpacman, id="Killer"))
     view.title = "Pacman"
     view.on_message(
         lambda mes: print(
@@ -74,7 +74,7 @@ def launch(view_instance: View, time_flow=1):
 
     while True:
         time.sleep(0.5 / time_flow)
-        
+
         result = scheduler.next(view=view)
         if result is not None:
             pass
@@ -82,4 +82,4 @@ def launch(view_instance: View, time_flow=1):
 
 
 if __name__ == "__main__":
-    launch(View())
+    launch(View(), 10)
